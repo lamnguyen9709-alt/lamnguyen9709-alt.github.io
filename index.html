@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Đăng Ký Tư Vấn</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"/>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      // Thay bằng Public Key thực tế từ tài khoản EmailJS của bạn
+      emailjs.init("0DlQeLdWBfw_mE1KJ"); 
+    })();
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
  
@@ -362,16 +371,10 @@
 </head>
 <body>
  
-<!-- ════ LOGO ════ -->
 <div class="logo-bar">
-  <!--
-    ĐỂ THÊM LOGO: thay dòng dưới bằng:
-    <img src="logo-cua-ban.png" alt="Logo">
-  -->
   <div class="logo-placeholder">THƯƠNG HIỆU</div>
 </div>
  
-<!-- ════ HERO ════ -->
 <section class="hero">
   <div class="hero-tag">⭐ Đặc quyền giới hạn</div>
   <h1>Tiêu đề chính<br/><span>của bạn ở đây</span></h1>
@@ -380,12 +383,7 @@
     ✅ Không phù hợp – Hoàn lại 100% chi phí!
   </div>
  
-  <!-- SLOT ẢNH HERO -->
   <div class="hero-image">
-    <!--
-      ĐỂ THÊM ẢNH: thay nội dung bên trong bằng:
-      <img src="anh-hero.jpg" alt="Hình ảnh chính">
-    -->
     <div class="img-hint">
       <span>🖼️</span>
       Thêm ảnh chính tại đây<br/>
@@ -394,7 +392,6 @@
   </div>
 </section>
  
-<!-- ════ LỢI ÍCH ════ -->
 <div class="section">
   <div class="section-title">Sau khi tham gia, bạn sẽ:</div>
   <div class="benefits-grid">
@@ -428,7 +425,6 @@
  
 <hr class="divider"/>
  
-<!-- ════ HỘP KHÓA HỌC / DỰ ÁN ════ -->
 <div style="padding: 28px 0 0;">
   <div class="course-box">
     <h2>Tên Khóa Học<br/>/ Chương Trình</h2>
@@ -436,17 +432,11 @@
   </div>
 </div>
  
-<!-- ════ SLOT ẢNH PHỤ ════ -->
 <div class="extra-image">
-  <!--
-    ĐỂ THÊM ẢNH PHỤ: thay nội dung bên trong bằng:
-    <img src="anh-phu.jpg" alt="Hình ảnh phụ">
-  -->
   🖼️ Ảnh phụ / banner chương trình<br/>
   <small>Thay bằng &lt;img src="..."&gt;</small>
 </div>
  
-<!-- ════ BIỂU MẪU ĐĂNG KÝ ════ -->
 <section class="form-section">
   <div class="section-title">📋 Đăng Ký Ngay</div>
  
@@ -518,9 +508,8 @@
   </div>
 </section>
  
-<!-- ════ FOOTER ════ -->
 <footer>
-  <p>© 2025 <a href="#">Tên Thương Hiệu</a> · Hotline: <a href="tel:0912345678">0912 345 678</a></p>
+  <p>© 2026 <a href="#">Tên Thương Hiệu</a> · Hotline: <a href="tel:0912345678">0912 345 678</a></p>
   <p style="margin-top:6px;"><a href="#">Chính sách bảo mật</a> · <a href="#">Điều khoản sử dụng</a></p>
 </footer>
  
@@ -534,16 +523,49 @@
     if (!phone) { alert('Vui lòng nhập số điện thoại!'); return; }
     if (!city)  { alert('Vui lòng chọn tỉnh thành!'); return; }
  
-    // Ẩn nút, hiện thông báo thành công
-    document.querySelector('.submit-btn').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
- 
-    // TODO: Gửi dữ liệu lên server hoặc Google Sheet tại đây
-    console.log({ name, phone, city,
-      email:   document.getElementById('email').value,
-      field:   document.getElementById('field').value,
-      message: document.getElementById('message').value
-    });
+    // Thay đổi trạng thái nút bấm để người dùng nhận biết hệ thống đang xử lý
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalBtnText = submitBtn.innerText;
+    submitBtn.innerText = "ĐANG GỬI...";
+    submitBtn.disabled = true;
+
+    // Đóng gói các giá trị ID hiện có thành 1 Object tham số
+    const templateParams = {
+      user_name: name,
+      user_phone: phone,
+      user_city: city,
+      user_email: document.getElementById('email').value,
+      user_field: document.getElementById('field').value,
+      user_message: document.getElementById('message').value
+    };
+
+    // Cấu hình ID tài khoản EmailJS của bạn vào đây
+    const serviceID = 'service_3a958xh';
+    const templateID = 'template_gmhenkg';
+
+    // Thực hiện lệnh gửi dữ liệu
+    emailjs.send(serviceID, templateID, templateParams)
+      .then(function() {
+        // GỬI THÀNH CÔNG: Thực thi đúng logic cũ của bạn
+        submitBtn.style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+        
+        // Reset sạch dữ liệu cũ trong các ô input sau khi gửi xong
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('city').value = '';
+        document.getElementById('field').value = '';
+        document.getElementById('message').value = '';
+      }, function(error) {
+        // GỬI THẤT BẠI
+        alert('Có lỗi xảy ra, không thể gửi đăng ký. Vui lòng thử lại!');
+        console.log('EmailJS Error:', error);
+        
+        // Trả lại trạng thái nút bấm ban đầu để khách bấm lại
+        submitBtn.innerText = originalBtnText;
+        submitBtn.disabled = false;
+      });
   }
 </script>
  
